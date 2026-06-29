@@ -6,61 +6,90 @@ MCP server proxy for SQLBot. It exposes SQLBot datasource discovery, table metad
 
 ## Requirements
 
-- Node.js 18 or newer
+- Docker
 - A running SQLBot service
-- SQLBot API keys, or a local SQLBot Docker container that exposes `FEISHU_ASK_ACCESS_KEY` and `FEISHU_ASK_SECRET_KEY`
+- SQLBot API keys
 
-## Install
+## Recommended Codex Config
 
-Run with Docker:
+Users do not need to download this repository manually. Add this single MCP server to Codex config and replace the SQLBot URL and keys:
+
+```toml
+[mcp_servers.sqlbot]
+command = "docker"
+args = [
+  "run",
+  "--rm",
+  "-i",
+  "--add-host",
+  "host.docker.internal:host-gateway",
+  "-e",
+  "SQLBOT_MCP_PROXY_BASE_URL",
+  "-e",
+  "SQLBOT_MCP_PROXY_ACCESS_KEY",
+  "-e",
+  "SQLBOT_MCP_PROXY_SECRET_KEY",
+  "ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0"
+]
+enabled = true
+startup_timeout_sec = 120
+
+[mcp_servers.sqlbot.env]
+SQLBOT_MCP_PROXY_BASE_URL = "http://host.docker.internal:8000"
+SQLBOT_MCP_PROXY_ACCESS_KEY = "<YOUR_SQLBOT_ACCESS_KEY>"
+SQLBOT_MCP_PROXY_SECRET_KEY = "<YOUR_SQLBOT_SECRET_KEY>"
+```
+
+Then restart Codex completely.
+
+If SQLBot is reachable through a public or LAN address, replace `SQLBOT_MCP_PROXY_BASE_URL` with that address, for example `https://sqlbot.example.com` or `http://192.168.1.10:8000`.
+
+## Prompt Template
+
+```text
+Please configure SQLBot MCP for Codex.
+
+MCP image:
+ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
+
+My SQLBot URL:
+http://host.docker.internal:8000
+
+My SQLBot access key:
+<YOUR_SQLBOT_ACCESS_KEY>
+
+My SQLBot secret key:
+<YOUR_SQLBOT_SECRET_KEY>
+
+Add this MCP to Codex config:
+- MCP name: sqlbot
+- command: docker
+- args: ["run", "--rm", "-i", "--add-host", "host.docker.internal:host-gateway", "-e", "SQLBOT_MCP_PROXY_BASE_URL", "-e", "SQLBOT_MCP_PROXY_ACCESS_KEY", "-e", "SQLBOT_MCP_PROXY_SECRET_KEY", "ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0"]
+- startup_timeout_sec: 120
+- SQLBOT_MCP_PROXY_BASE_URL: use the SQLBot URL above
+- SQLBOT_MCP_PROXY_ACCESS_KEY: use the access key above
+- SQLBOT_MCP_PROXY_SECRET_KEY: use the secret key above
+
+After configuration, remind me to fully restart Codex.
+
+After restart:
+- Check available datasources with sqlbot_list_datasources.
+- Use sqlbot_list_tables and sqlbot_describe_table before asking data questions.
+- Use sqlbot_ask_data for Text-to-SQL questions.
+- Use sqlbot_generate_report when I ask for an analysis report or chart.
+```
+
+## Quick Docker Test
+
+You can test the image outside Codex:
 
 ```bash
 docker run --rm -i \
+  --add-host host.docker.internal:host-gateway \
   -e SQLBOT_MCP_PROXY_BASE_URL=http://host.docker.internal:8000 \
   -e SQLBOT_MCP_PROXY_ACCESS_KEY=your-access-key \
   -e SQLBOT_MCP_PROXY_SECRET_KEY=your-secret-key \
   ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
-```
-
-Run directly with npm:
-
-```bash
-npx -y sqlbot-mcp-proxy
-```
-
-Or install globally:
-
-```bash
-npm install -g sqlbot-mcp-proxy
-sqlbot-mcp-proxy
-```
-
-## MCP Client Configuration
-
-Use stdio transport for local MCP clients:
-
-```json
-{
-  "mcpServers": {
-    "sqlbot": {
-      "command": "npx",
-      "args": ["-y", "sqlbot-mcp-proxy"],
-      "env": {
-        "SQLBOT_MCP_PROXY_BASE_URL": "http://127.0.0.1:8000",
-        "SQLBOT_MCP_PROXY_ACCESS_KEY": "your-access-key",
-        "SQLBOT_MCP_PROXY_SECRET_KEY": "your-secret-key"
-      }
-    }
-  }
-}
-```
-
-If SQLBot is already running in Docker and the keys are available inside that container, you can omit the two key variables and set:
-
-```json
-{
-  "SQLBOT_MCP_PROXY_DOCKER_CONTAINER": "sqlbot"
-}
 ```
 
 ## Tools
@@ -87,12 +116,18 @@ If SQLBot is already running in Docker and the keys are available inside that co
 | `SQLBOT_MCP_PROXY_HTTP_TIMEOUT_MS` | `120000` | SQLBot HTTP request timeout |
 | `SQLBOT_MCP_PROXY_REPORT_OUTPUT_DIR` | `outputs` | Directory for generated fallback SVG reports |
 
-## HTTP Mode
+## Advanced HTTP Mode
 
 Most MCP clients should use stdio. For clients that can send JSON-RPC over HTTP, start:
 
 ```bash
-npx -y sqlbot-mcp-proxy --http
+docker run --rm -p 8787:8787 \
+  --add-host host.docker.internal:host-gateway \
+  -e SQLBOT_MCP_PROXY_BASE_URL=http://host.docker.internal:8000 \
+  -e SQLBOT_MCP_PROXY_ACCESS_KEY=your-access-key \
+  -e SQLBOT_MCP_PROXY_SECRET_KEY=your-secret-key \
+  -e SQLBOT_MCP_PROXY_HTTP_HOST=0.0.0.0 \
+  ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0 --http
 ```
 
 Health check:
@@ -111,14 +146,7 @@ docker build -t ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0 .
 docker push ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
 ```
 
-3. Optional: publish the npm package:
-
-```bash
-npm login
-npm publish --access public
-```
-
-4. Publish MCP Registry metadata:
+3. Publish MCP Registry metadata:
 
 ```bash
 mcp-publisher login github
