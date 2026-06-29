@@ -5,7 +5,7 @@
   "mcpName": "io.github.wenRou21/sqlbot-mcp-proxy",
   "type": "commonjs",
   "bin": {
-    "sqlbot-mcp-proxy": "./sqlbot-mcp-proxy.js"
+    "sqlbot-mcp-proxy": "sqlbot-mcp-proxy.js"
   },
   "files": [
     "sqlbot-mcp-proxy.js",
