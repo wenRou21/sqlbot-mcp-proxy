@@ -1,0 +1,51 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.wenRou21/sqlbot-mcp-proxy",
+  "title": "SQLBot MCP Proxy",
+  "description": "MCP server proxy for SQLBot natural-language data querying, table metadata inspection, and report generation.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/wenRou21/sqlbot-mcp-proxy",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "sqlbot-mcp-proxy",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SQLBOT_MCP_PROXY_BASE_URL",
+          "description": "Base URL of the SQLBot service, for example http://127.0.0.1:8000.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "SQLBOT_MCP_PROXY_ACCESS_KEY",
+          "description": "SQLBot API access key. If omitted, the proxy can try FEISHU_ASK_ACCESS_KEY or read from the configured Docker container.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "SQLBOT_MCP_PROXY_SECRET_KEY",
+          "description": "SQLBot API secret key. If omitted, the proxy can try FEISHU_ASK_SECRET_KEY or read from the configured Docker container.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "SQLBOT_MCP_PROXY_DOCKER_CONTAINER",
+          "description": "Optional Docker container name used when reading FEISHU_ASK_ACCESS_KEY and FEISHU_ASK_SECRET_KEY from a running SQLBot container.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

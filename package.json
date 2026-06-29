@@ -1,0 +1,41 @@
+{
+  "name": "sqlbot-mcp-proxy",
+  "version": "0.1.0",
+  "description": "MCP server proxy for SQLBot natural-language data querying and report generation.",
+  "mcpName": "io.github.wenRou21/sqlbot-mcp-proxy",
+  "type": "commonjs",
+  "bin": {
+    "sqlbot-mcp-proxy": "./sqlbot-mcp-proxy.js"
+  },
+  "files": [
+    "sqlbot-mcp-proxy.js",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "start": "node sqlbot-mcp-proxy.js",
+    "start:http": "node sqlbot-mcp-proxy.js --http",
+    "pack:dry-run": "npm pack --dry-run"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "sqlbot",
+    "text-to-sql",
+    "data-analysis"
+  ],
+  "author": "wenRou21",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wenRou21/sqlbot-mcp-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wenRou21/sqlbot-mcp-proxy/issues"
+  },
+  "homepage": "https://github.com/wenRou21/sqlbot-mcp-proxy#readme"
+}
