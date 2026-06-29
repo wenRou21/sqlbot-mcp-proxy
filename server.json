@@ -10,9 +10,8 @@
   },
   "packages": [
     {
-      "registryType": "npm",
-      "identifier": "sqlbot-mcp-proxy",
-      "version": "0.1.0",
+      "registryType": "oci",
+      "identifier": "ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0",
       "transport": {
         "type": "stdio"
       },

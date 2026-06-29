@@ -9,6 +9,7 @@
   },
   "files": [
     "sqlbot-mcp-proxy.js",
+    "Dockerfile",
     "README.md",
     "LICENSE",
     "server.json"

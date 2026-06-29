@@ -12,6 +12,16 @@ MCP server proxy for SQLBot. It exposes SQLBot datasource discovery, table metad
 
 ## Install
 
+Run with Docker:
+
+```bash
+docker run --rm -i \
+  -e SQLBOT_MCP_PROXY_BASE_URL=http://host.docker.internal:8000 \
+  -e SQLBOT_MCP_PROXY_ACCESS_KEY=your-access-key \
+  -e SQLBOT_MCP_PROXY_SECRET_KEY=your-secret-key \
+  ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
+```
+
 Run directly with npm:
 
 ```bash
@@ -94,14 +104,21 @@ curl http://127.0.0.1:8787/health
 ## Publish
 
 1. Confirm package metadata in `package.json`.
-2. Publish the npm package:
+2. Publish an OCI image:
+
+```bash
+docker build -t ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0 .
+docker push ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
+```
+
+3. Optional: publish the npm package:
 
 ```bash
 npm login
 npm publish --access public
 ```
 
-3. Publish MCP Registry metadata:
+4. Publish MCP Registry metadata:
 
 ```bash
 mcp-publisher login github
