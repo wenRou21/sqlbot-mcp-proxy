@@ -21,8 +21,6 @@ args = [
   "run",
   "--rm",
   "-i",
-  "--add-host",
-  "host.docker.internal:host-gateway",
   "-e",
   "SQLBOT_MCP_PROXY_BASE_URL",
   "-e",
@@ -35,14 +33,14 @@ enabled = true
 startup_timeout_sec = 120
 
 [mcp_servers.sqlbot.env]
-SQLBOT_MCP_PROXY_BASE_URL = "http://host.docker.internal:8000"
+SQLBOT_MCP_PROXY_BASE_URL = "http://183.196.108.32:18088"
 SQLBOT_MCP_PROXY_ACCESS_KEY = "<YOUR_SQLBOT_ACCESS_KEY>"
 SQLBOT_MCP_PROXY_SECRET_KEY = "<YOUR_SQLBOT_SECRET_KEY>"
 ```
 
 Then restart Codex completely.
 
-If SQLBot is reachable through a public or LAN address, replace `SQLBOT_MCP_PROXY_BASE_URL` with that address, for example `https://sqlbot.example.com` or `http://192.168.1.10:8000`.
+If SQLBot is reachable through another public or LAN address, replace `SQLBOT_MCP_PROXY_BASE_URL` with that address, for example `https://sqlbot.example.com` or `http://192.168.1.10:18088`.
 
 ## Prompt Template
 
@@ -53,7 +51,7 @@ MCP image:
 ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
 
 My SQLBot URL:
-http://host.docker.internal:8000
+http://183.196.108.32:18088
 
 My SQLBot access key:
 <YOUR_SQLBOT_ACCESS_KEY>
@@ -64,7 +62,7 @@ My SQLBot secret key:
 Add this MCP to Codex config:
 - MCP name: sqlbot
 - command: docker
-- args: ["run", "--rm", "-i", "--add-host", "host.docker.internal:host-gateway", "-e", "SQLBOT_MCP_PROXY_BASE_URL", "-e", "SQLBOT_MCP_PROXY_ACCESS_KEY", "-e", "SQLBOT_MCP_PROXY_SECRET_KEY", "ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0"]
+- args: ["run", "--rm", "-i", "-e", "SQLBOT_MCP_PROXY_BASE_URL", "-e", "SQLBOT_MCP_PROXY_ACCESS_KEY", "-e", "SQLBOT_MCP_PROXY_SECRET_KEY", "ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0"]
 - startup_timeout_sec: 120
 - SQLBOT_MCP_PROXY_BASE_URL: use the SQLBot URL above
 - SQLBOT_MCP_PROXY_ACCESS_KEY: use the access key above
@@ -85,8 +83,7 @@ You can test the image outside Codex:
 
 ```bash
 docker run --rm -i \
-  --add-host host.docker.internal:host-gateway \
-  -e SQLBOT_MCP_PROXY_BASE_URL=http://host.docker.internal:8000 \
+  -e SQLBOT_MCP_PROXY_BASE_URL=http://183.196.108.32:18088 \
   -e SQLBOT_MCP_PROXY_ACCESS_KEY=your-access-key \
   -e SQLBOT_MCP_PROXY_SECRET_KEY=your-secret-key \
   ghcr.io/wenrou21/sqlbot-mcp-proxy:0.1.0
@@ -104,7 +101,7 @@ docker run --rm -i \
 
 | Name | Default | Description |
 | --- | --- | --- |
-| `SQLBOT_MCP_PROXY_BASE_URL` | `http://127.0.0.1:8000` | SQLBot service base URL |
+| `SQLBOT_MCP_PROXY_BASE_URL` | `http://183.196.108.32:18088` | SQLBot service base URL |
 | `SQLBOT_MCP_PROXY_ACCESS_KEY` | empty | SQLBot API access key |
 | `SQLBOT_MCP_PROXY_SECRET_KEY` | empty | SQLBot API secret key |
 | `FEISHU_ASK_ACCESS_KEY` | empty | Fallback access key name |
@@ -122,8 +119,7 @@ Most MCP clients should use stdio. For clients that can send JSON-RPC over HTTP,
 
 ```bash
 docker run --rm -p 8787:8787 \
-  --add-host host.docker.internal:host-gateway \
-  -e SQLBOT_MCP_PROXY_BASE_URL=http://host.docker.internal:8000 \
+  -e SQLBOT_MCP_PROXY_BASE_URL=http://183.196.108.32:18088 \
   -e SQLBOT_MCP_PROXY_ACCESS_KEY=your-access-key \
   -e SQLBOT_MCP_PROXY_SECRET_KEY=your-secret-key \
   -e SQLBOT_MCP_PROXY_HTTP_HOST=0.0.0.0 \

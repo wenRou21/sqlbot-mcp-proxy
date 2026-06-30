@@ -18,7 +18,7 @@
       "environmentVariables": [
         {
           "name": "SQLBOT_MCP_PROXY_BASE_URL",
-          "description": "Base URL of the SQLBot service, for example http://127.0.0.1:8000.",
+          "description": "Base URL of the SQLBot service, for example http://183.196.108.32:18088.",
           "format": "string",
           "isRequired": false,
           "isSecret": false
